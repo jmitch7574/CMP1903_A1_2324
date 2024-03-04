@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CMP1903_A1_2324
 {
+    /// <summary>
+    /// Creates a <c>Game</c> class and checks that the arithmetic logic inside the functions is correct
+    /// </summary>
     internal class Testing
     {
         /*
@@ -16,7 +19,8 @@ namespace CMP1903_A1_2324
          * Create a Die object and call its method.
          * Use debug.assert() to make the comparisons and tests.
          */
-
+        
+        
         /// <summary>
         /// Creates a <c>Die</c> object and runs <see cref="Die.Roll()"/> 100,000 to test if values are valid. 
         /// Uses Debug.Assert() to check dice value is between 1-6 and throws error if value is outside range.
@@ -33,42 +37,46 @@ namespace CMP1903_A1_2324
             {
                 // Rolls the Die
                 die.Roll();
+                
                 // Uses Debug.Assert() to confirm DieValue remains between 1-6
-                Debug.Assert(1 <= die.DieValue && die.DieValue <= 6, "Die value outside of valid range");
+                // Split into two instances in line with code feedback
+                Debug.Assert(1 <= die.DieValue, "Die value outside lower range");
+                Debug.Assert(6 >= die.DieValue, "Die value outside upper range");
             }
-            Console.WriteLine("Done");
+            Console.WriteLine("Completed Dice Class Check");
         }
 
         /// <summary>
-        /// Creates a <c>Game</c> object and runs <see cref="Game.PlayGame()"/>.
-        /// Once the loop is over it goes through every set of dice rolls in <c>State</c> and checks that all sum values are valid
+        /// Creates a <c>Game</c> object and runs <see cref="Game.RollThreDice()"/> 1000 times.
+        /// Each time it is run it will check the values reported by the Game class and check they are correct
         /// </summary>
         public void TestGame()
         {
             // Create new game object and run playgame
             Game testGame = new Game();
-            testGame.PlayGame();
-
-            // ------- Once the Game is Over -------------
             
             // Initialise a variable that contains the total from the previous state
             int oldRunningSum = 0;
             
             // Loop through all state saves generated during PlayGame()
-            foreach (var state in testGame.States)
+            for (int turn = 0; turn < 1000; turn++)
             {
+                // Roll three dice
+                testGame.RollThreeDice();
+                
                 // Split the state tuple into different variables
-                int[] rolls = state.Item1;
-                int sum = state.Item2;
-                int runningSum = state.Item3;
+                int[] rolls = new []{testGame.Die1.DieValue, testGame.Die2.DieValue, testGame.Die3.DieValue};
+                int sum = testGame.Sum;
                 
                 // Use Debug.Assert() to validate that the Sum() and new running sum are calculated correctly
                 Debug.Assert(rolls.Sum() == sum, "Reported Sum of rolls does not match actual sum of rolls");
-                Debug.Assert(runningSum == oldRunningSum + rolls.Sum(), "Reported running sum does not match actual running sum");
+                Debug.Assert(testGame.RunningSum == oldRunningSum + rolls.Sum(), "Reported running sum does not match actual running sum");
 
                 // Update the old running total for the next loop
-                oldRunningSum = runningSum;
+                oldRunningSum = testGame.RunningSum;
             }
+            
+            Console.Write("Completed Game Class Check");
         }
         
     }

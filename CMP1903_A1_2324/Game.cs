@@ -6,29 +6,26 @@ using System.Threading.Tasks;
 
 namespace CMP1903_A1_2324
 {
+    
+    /// <summary>
+    /// A class that creates our three dice and manages logic for rolling them
+    /// </summary>
     internal class Game
     {
         // Dice Objects
-        private readonly Die _die1 = new Die();
-        private readonly Die _die2 = new Die();
-        private readonly Die _die3 = new Die();
+        public readonly Die Die1 = new Die();
+        public readonly Die Die2 = new Die();
+        public readonly Die Die3 = new Die();
 
         /// <summary>
         /// The sum of the latest set of dice rolls
         /// </summary>
-        private int _sum = 0;
+        public int Sum = 0;
         
         /// <summary>
         /// The sum of every dice roll
         /// </summary>
-        private int _runningSum = 0;
-        
-        /// <summary>
-        /// A list of tuples that tracks dice information
-        /// Each tuple represents a set of 3 dice rolls
-        /// Each tuple contains the three values that were rolled, the sum of the three rolls and the running sum when the three die were rolled
-        /// </summary>
-        public List<(int[], int, int)> States = new List<(int[], int, int)>();
+        public int RunningSum = 0;
         
 
         /// <summary>
@@ -48,6 +45,9 @@ namespace CMP1903_A1_2324
                 
                 // Roll the three dice
                 this.RollThreeDice();
+                
+                // Output roll resutls
+                this.OutputInfo();
                 
                 // Ask user if program should keep rolling
                 playing = ContinuePlaying();
@@ -79,33 +79,37 @@ namespace CMP1903_A1_2324
             }
             
         }
+        
+        // This function has been refactored in line with feedback gathered in the code review
 
         /// <summary>
         /// Rolls three dice
         /// Calculates the sum of the three rolls
         /// Updates the running total
-        /// Outputs the information to console
         /// Updates the <c>States</c> object with this information
         /// </summary>
-        void RollThreeDice()
+        public void RollThreeDice()
         {
-            _die1.Roll();
-            _die2.Roll();
-            _die3.Roll();
+            Die1.Roll();
+            Die2.Roll();
+            Die3.Roll();
 
-            int[] rolls = { _die1.DieValue, _die2.DieValue, _die3.DieValue };
-            _sum = rolls.Sum();
+            int[] rolls = { Die1.DieValue, Die2.DieValue, Die3.DieValue };
+            Sum = rolls.Sum();
             
-            _runningSum += _sum;
-            
-            
-            Console.WriteLine($"Dice 1: {_die1.DieValue}");
-            Console.WriteLine($"Dice 2: {_die2.DieValue}");
-            Console.WriteLine($"Dice 3: {_die3.DieValue}");
-            Console.WriteLine($"Total for this roll: {_sum}");
-            Console.WriteLine($"Total overall: {_runningSum}");
-
-            States.Append((rolls, _sum, _runningSum));
+            RunningSum += Sum;
+        }
+        
+        /// <summary>
+        /// Outputs Info for current set of rolls
+        /// </summary>
+        void OutputInfo()
+        {
+            Console.WriteLine($"Dice 1: {Die1.DieValue}");
+            Console.WriteLine($"Dice 2: {Die2.DieValue}");
+            Console.WriteLine($"Dice 3: {Die3.DieValue}");
+            Console.WriteLine($"Total for this roll: {Sum}");
+            Console.WriteLine($"Total overall: {RunningSum}");
         }
 
         /// <summary>
